@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- OnShape https://cad.onshape.com/documents/8958d4e5127adc3c34752d12/w/aa05c0204d6d2e4464286bb1/e/3ed70ab94a6730ecf56b1c50 -->
+<mujoco model="furuta">
+    <compiler angle="radian" meshdir="assets" autolimits="true"/>
+    <option integrator="RK4" cone="elliptic"/>
+    <default>
+        <default class="furuta">
+            <joint frictionloss="0.008" armature="0.003"/>
+            <position kp="50" dampratio="0.03"/>
+         
+            <default class="visual">
+                <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+            </default>
+            <default class="collision">
+                <geom group="3"/>
+            </default>
+        </default>
+    </default>
+    <worldbody>
+        <!-- Link base -->
+        <body name="base" pos="0 0 0" quat="1 0 0 0" childclass="furuta">
+            <inertial pos="-0.00295694 0.0191018 0.0288044" mass="1.13058" fullinertia="0.000820486 0.00087301 0.00059956 0 0 0"/>
+            <!-- Part base -->
+            <!-- Mesh base -->
+            <geom type="mesh" class="visual" pos="0.0193214 -0.00298793 -0.00145828" quat="1 0 0 0" mesh="base" material="base_material"/>
+            <!-- Mesh base -->
+            <geom type="mesh" class="collision" pos="0.0193214 -0.00298793 -0.00145828" quat="1 0 0 0" mesh="base" material="base_material"/>
+        <!-- Link cópia__5__de_peça2_poc_quadrupede -->
+        <body name="cópia__5__de_peça2_poc_quadrupede" pos="-0.00295694 0.0191018 0.0685417" quat="0 -0.999552 0.0299244 0">
+            <!-- Joint from base to cópia__5__de_peça2_poc_quadrupede -->
+            <joint name="arm" type="hinge"/>
+            <inertial pos="1.73472e-18 0.0262348 -0.0075" mass="0.0173792" fullinertia="6.87711e-06 8.08156e-07 6.95023e-06 5.33272e-23 0 0"/>
+            <!-- Part cópia__5__de_peça2_poc_quadrupede -->
+            <!-- Mesh cópia__5__de_peça2_poc_quadrupede -->
+            <geom type="mesh" class="visual" pos="-0.015 0.0638383 0" quat="0.707107 0.707107 -0 -2.45327e-18" mesh="cópia__5__de_peça2_poc_quadrupede" material="cópia__5__de_peça2_poc_quadrupede_material"/>
+            <!-- Mesh cópia__5__de_peça2_poc_quadrupede -->
+            <geom type="mesh" class="collision" pos="-0.015 0.0638383 0" quat="0.707107 0.707107 -0 -2.45327e-18" mesh="cópia__5__de_peça2_poc_quadrupede" material="cópia__5__de_peça2_poc_quadrupede_material"/>
+        <!-- Link do pendulo passivo -->
+        <body name="cópia__3__de_peça2_poc_quadrupede" pos="1.62197e-16 0.05 -0.0075" quat="0.707107 -0.707107 1.90484e-17 1.22663e-18">
+            <!-- Joint from cópia__5__de_peça2_poc_quadrupede to cópia__3__de_peça2_poc_quadrupede -->
+            <joint name="passive1" type="hinge"/>1.22663e-18
+            <inertial pos="-6.70263e-08 -0.0333729 0.0176637" mass="0.319779" fullinertia="0.00019813 1.81315e-05 0.00019723 5.85614e-10 -9.65078e-12 8.92524e-06"/>
+            <!--site name="imu_site" pos="0 0 0" size="0.01" rgba="1 0 0 1"/-->
+            <!-- Part cópia__3__de_peça2_poc_quadrupede -->
+            <!-- Mesh cópia__3__de_peça2_poc_quadrupede -->
+            <geom type="mesh" class="visual" pos="-0.015 -0.0638383 0.011" quat="0.707107 -0.707107 0 -1.08947e-32" mesh="cópia__3__de_peça2_poc_quadrupede" material="cópia__3__de_peça2_poc_quadrupede_material"/>
+            <!-- Mesh cópia__3__de_peça2_poc_quadrupede -->
+            <geom type="mesh" class="collision" pos="-0.015 -0.0638383 0.011" quat="0.707107 -0.707107 0 -1.08947e-32" mesh="cópia__3__de_peça2_poc_quadrupede" material="cópia__3__de_peça2_poc_quadrupede_material"/>
+    </body>
+    </body>
+    </body>
+    </worldbody>
+    <asset>
+        <mesh file="base.stl"/>
+        <mesh file="cópia__5__de_peça2_poc_quadrupede.stl"/>
+        <mesh file="cópia__3__de_peça2_poc_quadrupede.stl"/>
+        <material name="base_material" rgba="0.615686 0.811765 0.929412 1"/>
+        <material name="cópia__5__de_peça2_poc_quadrupede_material" rgba="0.0352941 0 0.968627 1"/>
+        <material name="cópia__3__de_peça2_poc_quadrupede_material" rgba="1 0.156863 0.121569 1"/>
+    </asset>
+    <actuator>
+        <!--position class="furuta" name="arm" joint="arm"/-->
+        <velocity name="arm_velocity" joint="arm" kv="50" ctrllimited="true" ctrlrange="-300 300"/>
+    </actuator>
+    <!--sensor>
+        Angular velocity (gyroscope) -->
+        <!--gyro name="imu_gyro" site="imu_site"/-->
+
+        <!-- Linear acceleration (accelerometer) -->
+        <!-- <accelerometer name="imu_accel" site="imu_site"/>
+
+    </sensor> -->
+    <equality/>
+</mujoco>
