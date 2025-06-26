@@ -2,7 +2,7 @@
 A repository for studies with Mujoco and reinforcement learning frameworks
 Here you will find a case study with furuta pendulum with stable baselines 3
 
-Requirements: gymnasium, stable_baselines_3, mujoco
+Requirements: gymnasium, stable_baselines_3, mujoco, tensorboard
 
 * To train Furuta pendulum, use ```furuta_env.py```
 * To evaluate trained model, just run ```render.py``` with your trained model
