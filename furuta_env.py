@@ -1,9 +1,11 @@
-import gym
+import gymnasium as gym
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 import mujoco
 from mujoco import MjModel, MjData
 from time import sleep
+from stable_baselines3 import PPO
+import mujoco.viewer
 
 class FurutaEnv(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 60}
@@ -38,34 +40,41 @@ class FurutaEnv(gym.Env):
         return self._get_obs(), {}
 
     def _get_obs(self):
-        theta = self.data.qpos[1] % (2 * np.pi)
+        theta = np.rad2deg(self.data.qpos[1])%360  # Convert to degrees and wrap around
+        theta = np.deg2rad(theta)  # Convert back to radians for consistency
         theta_dot = self.data.qvel[1]
-        phi = self.data.qpos[0] % (2 * np.pi)
+        phi = np.rad2deg(self.data.qpos[0]) % 360
+        phi = np.deg2rad(phi)  # Convert back to radians for consistency
         phi_dot = self.data.qvel[0]
         return np.array([theta, theta_dot, phi, phi_dot], dtype=np.float32)
 
     def _compute_reward(self, obs):
         theta, theta_dot, _, phi_dot = obs
-        percent = 0.01
-        if np.pi*(1-percent) <= theta <= np.pi*(1+percent):
-            reward = -7 + np.sin(theta) + (1 + np.sin(theta)) ** 3 - 0.000005*(theta_dot**2 + phi_dot**2)
+        angle_offset = 0.3  #in radians
+        if (np.pi - angle_offset) <= theta <= (np.pi +angle_offset):
+            reward =  - np.cos(theta) - (1 + np.cos(theta)) ** 3
         else:
-            reward = -0.2
+            reward = -0.2 
         return reward
 
     def render(self):
         if self.viewer is None:
             self.viewer = mujoco.viewer.launch_passive(self.model, self.data)
         else:
-            self.viewer.sync()  # <-- this line updates the viewer every frame
+            self.viewer.sync()
 
-
-from stable_baselines3 import PPO
-
-
+time_steps = 2_000_000 # Choose between 1M,2M,4M or 10M
+experiment_number = 1  # Change this number for different experiments
 env = FurutaEnv()
 
-model = PPO("MlpPolicy", env, verbose=1)
-model.learn(total_timesteps=2_000_000)
+model = PPO("MlpPolicy", env, verbose=1,device="cuda",tensorboard_log="./furuta_tensorboard/")
 
-model.save("ppo_furuta")
+model.learn(total_timesteps=time_steps)
+if time_steps == 1_000_000:
+    model.save(f"ppo_furuta_1M_PPO{experiment_number}")
+elif time_steps == 2_000_000:
+    model.save(f"ppo_furuta_2M_PPO{experiment_number}")
+elif time_steps == 4_000_000:
+    model.save(f"ppo_furuta_4M_PPO{experiment_number}")
+elif time_steps == 10_000_000:
+    model.save(f"ppo_furuta_10M_PPO{experiment_number}")
