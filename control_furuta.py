@@ -9,7 +9,6 @@ data = mujoco.MjData(model)
 
 # Desired joint positions (in radians)
 i = 0
-j = 0
 positions = [-90, 90]  # Example positions in degrees
 error_integral = 0.0  # Initialize integral term for PID control
 speeds = [-70,0,70,0]
@@ -23,23 +22,6 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         # Read current positions
         q_coxa = data.qpos[model.joint("arm").qposadr]
         angular_speed = data.qvel[0]
-        # # Simple PID
-        # kp = 0.5
-        # ki = 0.021
-        # kd = 0.0
-        # error = target_coxa - q_coxa
-        # error_integral += error  # Integral term
-        # # anti windup
-        # threshold = 90
-        # if error_integral > threshold:
-        #     error_integral = threshold
-        # elif error_integral < -threshold:
-        #     error_integral = -threshold
-        # error_derivative = (error - data.ctrl[0]) / 0.0025
-        # data.ctrl[0] = kp * (error)  + ki*error_integral + kd * error_derivative
-        # target_speed_rpm = speeds[j]
-        # target_speed = target_speed_rpm*np.pi/30  # Convert RPM to rad/s
-        # data.ctrl[0] = target_speed
         # Calculating angles
         angle_read = (data.qpos[1]*180/np.pi)%360
         const += 0.0001/(180-angle_read) # Constant based on the angle
@@ -78,9 +60,4 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
             data.ctrl[0] = oscilation[i%len(oscilation)]
         # Update control signal
         i += 1
-        # if i%150 == 0:
-        #     j += 1
-        #     if j >= len(speeds):
-        #         j = 0
-        #Update viewer
         viewer.sync()
