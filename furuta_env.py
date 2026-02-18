@@ -30,7 +30,8 @@ class FurutaEnv(gym.Env):
         reward = self._compute_reward(obs)
 
         # Custom termination if phi exceeds bounds
-        terminated = abs(obs[2]) > np.pi / 2  # φ out-of-bounds
+        terminated = abs(obs[2]) > np.pi  # φ out-of-bounds
+        # when on evaluation mode, do terminated = False
         truncated = False  # Let TimeLimit decide if truncated
 
         info = {}
